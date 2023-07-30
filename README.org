@@ -1,0 +1,48 @@
+#+title: Yasnippet Completion at Point Function
+#+author: Luigi Sartor Piucco
+#+language: en
+
+Provides an extra CAPF for completing [[https://github.com/joaotavora/yasnippet][Yasnippet]] keys, automatically triggering
+expansion on select. Further, the user can fill in the template as they do
+normally.
+
+* Installation
+Currently, this is left as a job for the user, as the package has not yet been
+submitted to any archives. Thus, installing entails placing this repo somewhere
+in ~load-path~ and possibly compiling it to byte- and/or native-code. If you use
+a package manager, check their documentation on how to use packages stored in
+git repositories.
+
+* Setup
+Add ~yasnippet-capf~ to ~completion-at-point-functions~, with code such as the
+following in your config:
+
+#+begin_src emacs-lisp
+;; "Global" setup; enabled anywhere Yasnippet is active.
+(add-hook 'yas-minor-mode-hook
+          (lambda () (add-to-list 'completion-at-point-functions #'yasnippet-capf)))
+
+;; OR
+
+;; Per-mode setup; enabled only for the modes you select. Note Yasnippet
+;; should also be separately activated in these.
+(add-hook 'some-mode-hook
+          (lambda () (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+#+end_src
+
+If you use other CAPFs as well (very likely), beware that order matters. They
+are tried in order, and unless configured otherwise, only the completions from
+the first function to return non-nil will appear. A simple solution is to adjust
+the ~:depth~ argument passed to ~add-hook~, to change the order to your liking.
+This CAPF is configured to allow other CAPFs to run after it, so it should be
+to add it early in the sequence.
+
+* Usage
+In the most general sense, just use completion regularly, it'll have snippet
+candidates now. What this looks like depends highly on your completion frontend,
+be it the in-built Emacs feature, [[https://github.com/minad/corfu][corfu]], [[https://github.com/company-mode/company-mode][company]] etc. Additional elements may
+appear depending on what your setup supports, such as a preview of the expansion
+as documentation, icons and annotations.
+
+* Contributions and Copyright
+See the [[file:LICENSE][LICENSE]] file next to this README.
